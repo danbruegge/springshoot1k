@@ -1,18 +1,22 @@
 window.onload = function () {
     'use strict';
 
+    var r = function (i, j) {
+        return Math.floor((Math.random()*j)+i);
+    }
+
+    var N = function () {
+        return [r(s, W - (s * 2)), r(s, H - (s * 2)), 9];
+    }
+
     var W = 640,
         H = 480,
-        speed = 5,
-        keys = [
-            [38, 40, 39, 37], // up, down, right, left
-            [87, 83, 68, 65] // up, down, right, left
-        ],
         s = 32, // size
-        P = [
-            [s, s], // x, y
-            [W - (s * 2), H - (s * 2)] // x, y
-        ];
+        t = 9, // tempo
+        B = [], // bullet
+        Bs = 6,
+        E = N(),
+        P = [s / 2, (H / 2) - (s / 2)]; // x, y
 
     a.canvas.width = W;
     a.canvas.height = H;
@@ -25,70 +29,69 @@ window.onload = function () {
         a.fill();
     };
 
-    var map = function () {
-        a.clearRect(0, 0, W, H);
-        rect(0, 0, W, H, '#d2bb6b');
-    };
-
-    var tank = function (p) {
-        rect(p[0], p[1], s, s, '#5a8b39');
-    };
-
-    var collision = function (i) {
-        var p = P[i];
-
-        if (p[0] <= 0) {
-            p[0] = 0;
-        }
-
-        if (p[1] <= 0) {
-            p[1] = 0;
-        }
-
-        if (p[0] >= (W - s)) {
-            p[0] = (W - s);
-        }
-
-        if (p[1] >= (H - s)) {
-            p[1] = (H - s);
-        }
-    };
-
-    var main = function () {
-        map();
-        tank(P[0]);
-        tank(P[1]);
-    };
-
     // Bindings
     window.onkeydown = function (e) {
-        var k = e.keyCode;
-        console.log(P[0][0], P[0][1]);
-        for (var i = 0; i < 2; i++) {
-            if (k === keys[i][0]) {
-                // up
-                P[i][1] -= speed;
-            }
+        var C = e.keyCode;
+        if (C === 38) { // up
+            P[1] -= t;
+        }
 
-            if (k === keys[i][1]) {
-                // down
-                P[i][1] += speed;
-            }
+        if (C === 40) { // down
+            P[1] += t;
+        }
 
-            if (k === keys[i][2]) {
-                // right
-                P[i][0] += speed;
-            }
+        if (C === 32) { // fire
+            B.push([P[0] + s, P[1] + (s / 2) - (Bs / 2)]);
+        }
 
-            if (k === keys[i][3]) {
-                // left
-                P[i][0] -= speed;
-            }
+        // collision
+        if (P[1] <= 0) {
+            P[1] = 0;
+        }
 
-            collision(i);
+        if (P[1] >= (H - s)) {
+            P[1] = (H - s);
         }
     };
 
     // main();
-    window.setInterval(main, 10);
+    window.setInterval(function () {
+        // draw map
+        a.clearRect(0, 0, W, H);
+        rect(0, 0, W, H, '#cc6');
+        rect(s * 2, 0, 2, H, '#993');
+
+        // enemy
+        rect(E[0], E[1], s, s, '#f0' + E[2]);
+
+        // bullets
+        for (var i = 0; i < B.length; i++) {
+            B[i][0] += 2;
+
+            if (B[i][0] <= (W - (Bs * 2))) { // end of the field
+                var A = B[i][0] <= E[0];
+                var Z = B[i][1] > E[1] && B[i][1] < (E[1] + s);
+
+                console.log(A, Z);
+
+                if (A) { // enemy collision
+                    rect(B[i][0], B[i][1], Bs, Bs, '#ff0');
+                } else {
+                    if (Z) {
+                        B.splice(i, 1);
+                        if (E[2] > 0) {
+                            rect(E[0], E[1], s, s, '#f0' + E[2]);
+                            E[2] -= 1;
+                        } else {
+                            E = N();
+                            rect(E[0], E[1], s, s, '#f0' + E[2]);
+                        }
+                    }
+                }
+            }
+        }
+
+         // draw player
+        rect(P[0], P[1], s, s, '#693');
+    }, 10);
 };
