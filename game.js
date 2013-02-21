@@ -69,24 +69,20 @@ window.onload = function () {
             B[i][0] += 2;
 
             if (B[i][0] <= (W - (Bs * 2))) { // end of the field
-                var A = B[i][0] <= E[0];
+                var A = B[i][0] >= E[0];
                 var Z = B[i][1] > E[1] && B[i][1] < (E[1] + s);
 
-                console.log(A, Z);
-
-                if (A) { // enemy collision
-                    rect(B[i][0], B[i][1], Bs, Bs, '#ff0');
-                } else {
-                    if (Z) {
-                        B.splice(i, 1);
-                        if (E[2] > 0) {
-                            rect(E[0], E[1], s, s, '#f0' + E[2]);
-                            E[2] -= 1;
-                        } else {
-                            E = N();
-                            rect(E[0], E[1], s, s, '#f0' + E[2]);
-                        }
+                if (A && Z) { // enemy collision
+                    B.splice(i, 1);
+                    if (E[2] > 0) {
+                        rect(E[0], E[1], s, s, '#f0' + E[2]);
+                        E[2] -= 1;
+                    } else {
+                        E = N();
+                        rect(E[0], E[1], s, s, '#f0' + E[2]);
                     }
+                } else {
+                    rect(B[i][0], B[i][1], Bs, Bs, '#ff0');
                 }
             }
         }
