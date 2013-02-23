@@ -6,7 +6,8 @@ var N = function () {
     return [r(s, W - (s * 2)), r(s, H - (s * 2)), 9];
 };
 
-var W = 640,
+var I = window,
+    W = 640,
     H = 480,
     s = 32, // size
     t = 9, // tempo
@@ -15,13 +16,13 @@ var W = 640,
     E = N(), // Enemy
     P = [s / 2, (H / 2) - (s / 2)], // x, y
     K = 0, // KILLS
-    T = 10, // Time to count down
+    T = 99, // Time to count down
     h = 0; // time helper
 
 a.canvas.width = W;
 a.canvas.height = H;
 
-var rect = function (x, y, w, h, color) {
+var R = function (x, y, w, h, color) {
     a.beginPath();
     a.rect(x, y, w, h);
     a.fillStyle = color;
@@ -30,7 +31,7 @@ var rect = function (x, y, w, h, color) {
 };
 
 // Bindings
-window.onkeydown = function (e) {
+I.onkeydown = function (e) {
     var C = e.keyCode;
     if (C === 38) { // up
         P[1] -= t;
@@ -55,14 +56,14 @@ window.onkeydown = function (e) {
 };
 
 // main();
-var main = window.setInterval(function () {
+var M = I.setInterval(function () {
     // draw map
     a.clearRect(0, 0, W, H);
-    rect(0, 0, W, H, '#cc6');
-    rect(s * 2, 0, 2, H, '#993');
+    R(0, 0, W, H, '#cc6');
+    R(s * 2, 0, 2, H, '#993');
 
     // enemy
-    rect(E[0], E[1], s, s, '#f0' + E[2]);
+    R(E[0], E[1], s, s, '#f0' + E[2]);
 
     // bullets
     for (var i = 0; i < B.length; i++) {
@@ -75,21 +76,21 @@ var main = window.setInterval(function () {
             if (A && Z) { // enemy collision
                 B.splice(i, 1);
                 if (E[2] > 0) {
-                    rect(E[0], E[1], s, s, '#f0' + E[2]);
+                    R(E[0], E[1], s, s, '#f0' + E[2]);
                     E[2] -= 1;
                 } else {
                     K++;
                     E = N();
-                    rect(E[0], E[1], s, s, '#f0' + E[2]);
+                    R(E[0], E[1], s, s, '#f0' + E[2]);
                 }
             } else {
-                rect(B[i][0], B[i][1], Bs, Bs, '#ff0');
+                R(B[i][0], B[i][1], Bs, Bs, '#ff0');
             }
         }
     }
 
     // draw player
-    rect(P[0], P[1], s, s, '#693');
+    R(P[0], P[1], s, s, '#693');
 
     // draw infos
     a.fillText('T: ' + T, 80, 10);
@@ -103,10 +104,10 @@ var main = window.setInterval(function () {
     }
 
     if (T === -1) {
-        window.clearInterval(main);
+        I.clearInterval(M);
 
         a.fillStyle = '#000';
         a.textAlign = 'center';
-        a.fillText('F5 RESTART', W / 2, H / 2);
+        a.fillText('HIT F5', W / 2, H / 2);
     }
 }, 10);
