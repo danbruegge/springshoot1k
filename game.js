@@ -33,15 +33,15 @@ var R = function (x, y, w, h, color) {
 // Bindings
 I.onkeydown = function (e) {
     var C = e.keyCode;
-    if (C === 38) { // up
+    if (C == 38) { // up
         P[1] -= t;
     }
 
-    if (C === 40) { // down
+    if (C == 40) { // down
         P[1] += t;
     }
 
-    if (C === 32) { // fire
+    if (C == 32) { // fire
         B.push([P[0] + s, P[1] + (s / 2) - (Bs / 2)]);
     }
 
@@ -93,17 +93,17 @@ var M = I.setInterval(function () {
     R(P[0], P[1], s, s, '#693');
 
     // draw infos
-    a.fillText('T: ' + T, 80, 10);
+    a.fillText('T: ' + T, 80, 9);
     a.fillText('K: ' + K, 80, 20);
 
     // count time down
     h++;
-    if (h === 100) {
+    if (h == 99) {
         T--;
         h = 0;
     }
 
-    if (T === -1) {
+    if (T == -1) {
         I.clearInterval(M);
 
         a.fillStyle = '#000';
