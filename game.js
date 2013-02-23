@@ -1,34 +1,32 @@
-var r = function (i, j) {
-    return Math.floor((Math.random() * (j - i)) + i);
-};
-
-var N = function () {
-    return [r(s * 3, W - (s * 2)), r(s, H - (s * 2)), 9];
-};
-
-var I = window,
+var M,
+    I = window,
     W = 640,
     H = 480,
     s = 32, // size
     t = 9, // tempo
     B = [], // bullet
     b = 6, // Bullet size
+    N = function () { // generate new enemy
+        return [r(s * 3, W - (s * 2)), r(s, H - (s * 2)), 9];
+    },
     E = N(), // Enemy
     P = [s / 2, (H / 2) - (s / 2)], // x, y
     K = 0, // KILLS
     T = 99, // Time to count down
-    h = 0; // time helper
+    h = 0, // time helper
+    r = function (i, j) { // generate random number in range i to j
+        return Math.floor((Math.random() * (j - i)) + i);
+    }
+    R = function (x, y, w, h, color) { // draw rectangle
+        a.beginPath();
+        a.rect(x, y, w, h);
+        a.fillStyle = color;
+        a.closePath();
+        a.fill();
+    };
 
 a.canvas.width = W;
 a.canvas.height = H;
-
-var R = function (x, y, w, h, color) {
-    a.beginPath();
-    a.rect(x, y, w, h);
-    a.fillStyle = color;
-    a.closePath();
-    a.fill();
-};
 
 // Bindings
 I.onkeydown = function (e) {
@@ -56,11 +54,10 @@ I.onkeydown = function (e) {
 };
 
 // main();
-var M = I.setInterval(function () {
+M = I.setInterval(function () {
     // draw map
     a.clearRect(0, 0, W, H);
     R(0, 0, W, H, '#cc6');
-    R(576, 416, s, s, '#f00');
     R(s * 2, 0, 2, H, '#993');
 
     // enemy
