@@ -6,6 +6,9 @@ var M,
     t = 9, // tempo
     B = [], // bullet
     b = 6, // Bullet size
+    r = function (i, j) { // generate random number in range i to j
+        return Math.floor((Math.random() * (j - i)) + i);
+    },
     N = function () { // generate new enemy
         return [r(s * 3, W - (s * 2)), r(s, H - (s * 2)), 9];
     },
@@ -14,9 +17,6 @@ var M,
     K = 0, // KILLS
     T = 99, // Time to count down
     h = 0, // time helper
-    r = function (i, j) { // generate random number in range i to j
-        return Math.floor((Math.random() * (j - i)) + i);
-    }
     R = function (x, y, w, h, color) { // draw rectangle
         a.beginPath();
         a.rect(x, y, w, h);
@@ -108,4 +108,4 @@ M = I.setInterval(function () {
         a.textAlign = 'center';
         a.fillText('HIT F5', W / 2, H / 2);
     }
-}, 10);
+}, 9);
