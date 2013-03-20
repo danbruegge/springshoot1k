@@ -1,7 +1,6 @@
 var M,
     I = window,
     W = 640,
-    H = 480,
     s = 32, // size
     t = 9, // tempo
     B = [], // bullet
@@ -10,10 +9,10 @@ var M,
         return Math.floor((Math.random() * (j - i)) + i);
     },
     N = function () { // generate new enemy
-        return [r(s * 3, W - (s * 2)), r(s, H - (s * 2)), 9];
+        return [r(s * 3, W - (s * 2)), r(s, W - (s * 2)), 9];
     },
     E = N(), // Enemy
-    P = [s / 2, (H / 2) - (s / 2)], // x, y
+    P = [s / 2, (W / 2) - (s / 2)], // x, y
     K = 0, // KILLS
     T = 99, // Time to count down
     h = 0, // time helper
@@ -21,12 +20,11 @@ var M,
         a.beginPath();
         a.rect(x, y, w, h);
         a.fillStyle = color;
-        a.closePath();
         a.fill();
     };
 
-a.canvas.width = W;
-a.canvas.height = H;
+a.t = a.fillText;
+a.canvas.width = a.canvas.height = W;
 
 // Bindings
 I.onkeydown = function (e) {
@@ -39,7 +37,7 @@ I.onkeydown = function (e) {
         P[1] += t;
     }
 
-    if (C == 32) { // fire
+    if (C == s) { // fire, use var s, 'cause its - 1byte
         B.push([P[0] + s, P[1] + (s / 2) - (b / 2)]);
     }
 
@@ -48,20 +46,20 @@ I.onkeydown = function (e) {
         P[1] = 0;
     }
 
-    if (P[1] >= (H - s)) {
-        P[1] = (H - s);
+    if (P[1] >= (W - s)) {
+        P[1] = (W - s);
     }
 };
 
 // main();
 M = I.setInterval(function () {
     // draw map
-    a.clearRect(0, 0, W, H);
-    R(0, 0, W, H, '#cc6');
-    R(s * 2, 0, 2, H, '#993');
+    a.clearRect(0, 0, W, W);
+    R(0, 0, W, W, '#333');
+    R(s * 2, 0, 2, W, '#000');
 
     // enemy
-    R(E[0], E[1], s, s, '#f0' + E[2]);
+    R(E[0], E[1], s, s, '#' + E[2] + '00');
 
     // bullets
     for (var i = 0; i < B.length; i++) {
@@ -74,25 +72,26 @@ M = I.setInterval(function () {
             if (A && Z) { // enemy collision
                 B.splice(i, 1);
                 if (E[2] > 0) {
-                    R(E[0], E[1], s, s, '#f0' + E[2]);
+                    R(E[0], E[1], s, s, '#' + E[2] + '00');
                     E[2]--;
                 } else {
                     K++;
                     E = N();
-                    R(E[0], E[1], s, s, '#f0' + E[2]);
+                    R(E[0], E[1], s, s, '#' + E[2] + '00');
                 }
             } else {
-                R(B[i][0], B[i][1], b, b, '#ff0');
+                R(B[i][0], B[i][1], b, b, '#dd0');
             }
         }
     }
 
     // draw player
-    R(P[0], P[1], s, s, '#693');
+    R(P[0], P[1], s, s, '#000');
 
     // draw infos
-    a.fillText('T: ' + T, 80, 9);
-    a.fillText('K: ' + K, 80, 20);
+    a.fillStyle = '#fff';
+    a.t('T: ' + T, 80, 9);
+    a.t('K: ' + K, 80, 20);
 
     // count time down
     h++;
@@ -106,6 +105,6 @@ M = I.setInterval(function () {
 
         a.fillStyle = '#000';
         a.textAlign = 'center';
-        a.fillText('HIT F5', W / 2, H / 2);
+        a.t('HIT F5', W / 2, H / 2);
     }
 }, 9);
