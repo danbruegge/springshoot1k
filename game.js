@@ -2,7 +2,7 @@ var M,
     I = window,
     W = 640,
     s = 32, // size
-    t = 9, // tempo
+    t = s / 1.5, // tempo
     B = [], // bullet
     b = 6, // Bullet size
     r = function (i, j) { // generate random number in range i to j
@@ -29,17 +29,15 @@ a.canvas.width = a.canvas.height = W;
 // Bindings
 I.onkeydown = function (e) {
     var C = e.keyCode;
-    if (C == 38) { // up
-        P[1] -= t;
-    }
-
-    if (C == 40) { // down
-        P[1] += t;
-    }
 
     if (C == s) { // fire, use var s, 'cause its - 1byte
         B.push([P[0] + s, P[1] + (s / 2) - (b / 2)]);
     }
+};
+
+I.onmousemove = function (e) {
+    // player position
+    P[1] = e.pageY;
 
     // collision
     if (P[1] <= 0) {
@@ -67,7 +65,7 @@ M = I.setInterval(function () {
 
         if (B[i][0] <= (W - (b * 2))) { // end of the field
             var A = B[i][0] >= E[0];
-            var Z = B[i][1] > E[1] && B[i][1] < (E[1] + s);
+            var Z = B[i][1] > E[1] && B[i][1] < E[1] + s;
 
             if (A && Z) { // enemy collision
                 B.splice(i, 1);
@@ -105,6 +103,7 @@ M = I.setInterval(function () {
 
         a.fillStyle = '#000';
         a.textAlign = 'center';
-        a.t('HIT F5', W / 2, H / 2);
+        a.fillStyle = '#fff';
+        a.t('HIT F5', W / 2, W / 2);
     }
-}, 9);
+}, 1);
