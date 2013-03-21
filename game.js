@@ -2,7 +2,7 @@ var M,
     I = window,
     W = 640,
     s = 32, // size
-    t = s / 1.5, // tempo
+    t = 22, // tempo
     B = [], // bullet
     b = 6, // Bullet size
     r = function (i, j) { // generate random number in range i to j
@@ -28,9 +28,7 @@ a.canvas.width = a.canvas.height = W;
 
 // Bindings
 I.onkeydown = function (e) {
-    var C = e.keyCode;
-
-    if (C == s) { // fire, use var s, 'cause its - 1byte
+    if (e.keyCode == s) { // fire, use var s, 'cause its - 1byte
         B.push([P[0] + s, P[1] + (s / 2) - (b / 2)]);
     }
 };
@@ -44,8 +42,8 @@ I.onmousemove = function (e) {
         P[1] = 0;
     }
 
-    if (P[1] >= (W - s)) {
-        P[1] = (W - s);
+    if (P[1] >= W - s) {
+        P[1] = W - s;
     }
 };
 
@@ -63,7 +61,7 @@ M = I.setInterval(function () {
     for (var i = 0; i < B.length; i++) {
         B[i][0] += 2;
 
-        if (B[i][0] <= (W - (b * 2))) { // end of the field
+        if (B[i][0] <= W - (b * 2)) { // end of the field
             var A = B[i][0] >= E[0];
             var Z = B[i][1] > E[1] && B[i][1] < E[1] + s;
 
