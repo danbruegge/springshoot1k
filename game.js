@@ -1,6 +1,6 @@
 var M,
-    I = window,
-    W = 640,
+    W = window,
+    S = 640, // window size
     s = 32, // size
     t = 22, // tempo
     B = [], // bullet
@@ -9,10 +9,10 @@ var M,
         return Math.floor((Math.random() * (j - i)) + i);
     },
     N = function () { // generate new enemy
-        return [r(s * 3, W - (s * 2)), r(s, W - (s * 2)), 9];
+        return [r(0, S - s), r(0, S - (s * 3)), 9];
     },
     E = N(), // Enemy
-    P = [s / 2, (W / 2) - (s / 2)], // x, y
+    P = [0, S - (s * 1.5)], // Player x, y
     K = 0, // KILLS
     T = 99, // Time to count down
     h = 0, // time helper
@@ -24,46 +24,46 @@ var M,
     };
 
 a.t = a.fillText;
-a.canvas.width = a.canvas.height = W;
+a.canvas.width = a.canvas.height = S;
 
 // Bindings
-I.onkeydown = function (e) {
+W.onkeydown = function (e) {
     if (e.keyCode == s) { // fire, use var s, 'cause its - 1byte
-        B.push([P[0] + s, P[1] + (s / 2) - (b / 2)]);
+        B.push([P[0] + (s / 2) - (b / 2), P[1]]);
     }
 };
 
-I.onmousemove = function (e) {
+W.onmousemove = function (e) {
     // player position
-    P[1] = e.pageY;
+    P[0] = e.pageX;
 
     // collision
-    if (P[1] <= 0) {
-        P[1] = 0;
+    if (P[0] <= 0) {
+        P[0] = 0;
     }
 
-    if (P[1] >= W - s) {
-        P[1] = W - s;
+    if (P[0] >= S - s) {
+        P[0] = S - s;
     }
 };
 
 // main();
-M = I.setInterval(function () {
+M = W.setInterval(function () {
     // draw map
-    a.clearRect(0, 0, W, W);
-    R(0, 0, W, W, '#333');
-    R(s * 2, 0, 2, W, '#000');
+    a.clearRect(0, 0, S, S);
+    R(0, 0, S, S, '#333'); // background
+    R(0, S - (s * 2), S, 2, '#000'); // seperator line
 
     // enemy
     R(E[0], E[1], s, s, '#' + E[2] + '00');
 
     // bullets
     for (var i = 0; i < B.length; i++) {
-        B[i][0] += 2;
+        B[i][1] -= 2;
 
-        if (B[i][0] <= W - (b * 2)) { // end of the field
-            var A = B[i][0] >= E[0];
-            var Z = B[i][1] > E[1] && B[i][1] < E[1] + s;
+        if (B[i][1] >= 0) { // if not end of the field
+            var A = B[i][1] <= E[1] + s;
+            var Z = B[i][0] > E[0] - b && B[i][0] < E[0] + s;
 
             if (A && Z) { // enemy collision
                 B.splice(i, 1);
@@ -76,32 +76,34 @@ M = I.setInterval(function () {
                     R(E[0], E[1], s, s, '#' + E[2] + '00');
                 }
             } else {
-                R(B[i][0], B[i][1], b, b, '#dd0');
+                R(B[i][0], B[i][1], b, b, '#dd0'); // bullet
             }
+        } else {
+            B.splice(i, 1);
         }
     }
 
     // draw player
-    R(P[0], P[1], s, s, '#000');
+    R(P[0], P[1], s, s, '#dd0');
 
     // draw infos
     a.fillStyle = '#fff';
-    a.t('T: ' + T, 80, 9);
-    a.t('K: ' + K, 80, 20);
+    a.t('T: ' + T, 0, 9);
+    a.t('K: ' + K, 0, 20);
 
     // count time down
     h++;
-    if (h == 99) {
+    if (h > 99) {
         T--;
         h = 0;
     }
 
     if (T == -1) {
-        I.clearInterval(M);
+        W.clearInterval(M);
 
         a.fillStyle = '#000';
         a.textAlign = 'center';
         a.fillStyle = '#fff';
-        a.t('HIT F5', W / 2, W / 2);
+        a.t('HIT F5', S / 2, S / 2);
     }
 }, 1);
