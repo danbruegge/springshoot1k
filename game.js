@@ -17,10 +17,10 @@ var M,
     K = 0, // KILLS
     T = 9999, // Time to count down
     h = 0, // time helper
-    R = function (x, y, w, h, color) { // draw rectangle
+    R = function (x, y, w, h, c) { // draw rectangle
         a.beginPath();
         a.rect(x, y, w, h);
-        a.fillStyle = color;
+        a.fillStyle = c;
         a.fill();
     },
     w = function (t, x, y) {
@@ -78,13 +78,12 @@ W.onclick = function (e) {
                 if (A && Z) { // enemy collision
                     B.splice(i, 1);
                     if (E[2] > 0) {
-                        R(E[0], E[1], s, s, '#' + E[2] + '00');
                         E[2]--;
                     } else {
                         K++;
                         E = N();
-                        R(E[0], E[1], s, s, '#' + E[2] + '00');
                     }
+                    R(E[0], E[1], s, s, '#' + E[2] + '00');
                 } else {
                     R(B[i][0], B[i][1], b, b, '#dd0'); // bullet
                 }
@@ -101,7 +100,7 @@ W.onclick = function (e) {
 
         // draw infos
         w('T: ' + T/100, 0, 9);
-        w('K: ' + K, 0, 20);
+        w('K: ' + K, 0, t);
 
         // if time is over
         if (!T) {
