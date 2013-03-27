@@ -9,9 +9,10 @@ var M,
         return Math.floor((Math.random() * (j - i)) + i);
     },
     N = function () { // generate new enemy
-        return [r(0, S - s), r(0, S - (s * 3)), 9];
+        return [r(0, S - s), r(0, S - (s * 3))];
     },
     E = N(), // Enemy
+    l = 9, // Enemy life
     O = 0, // Player y
     o = S - (s * 1.5), // Player y
     K = 0, // KILLS
@@ -52,7 +53,7 @@ W.onmousemove = function (e) {
     }
 };
 
-R(0, 0, S, S, '#333'); // background
+R(0, 0, S, S, '#987'); // background
 w('GO', s, s);
 
 W.onclick = function (e) {
@@ -61,29 +62,46 @@ W.onclick = function (e) {
     M = W.setInterval(function () {
         // draw map
         a.clearRect(0, 0, S, S);
-        R(0, 0, S, S, '#333'); // background
-        R(0, S - (s * 2), S, 2, '#000'); // seperator line
+        R(0, 0, S, S, '#987'); // background
 
         // enemy
-        R(E[0], E[1], s, s, '#' + E[2] + '00');
+        R(E[0], E[1], s, s, '#6' + l + l);
 
         // bullets
         for (var i = 0; i < B.length; i++) {
             B[i][1] -= 2;
 
             if (B[i][1] >= 0) { // if not end of the field
-                var A = B[i][1] <= E[1] + s;
-                var Z = B[i][0] > E[0] - b && B[i][0] < E[0] + s;
+                var A = B[i][1] <= E[1] + s,
+                    Z = B[i][0] > E[0] - b && B[i][0] < E[0] + s,
+                    u = E[0];
 
                 if (A && Z) { // enemy collision
                     B.splice(i, 1);
-                    if (E[2] > 0) {
-                        E[2]--;
+                    if (l > 0) {
+                        l--;
+
+                        if (r(0, 9) >= 5) {
+                            u -= s*1.5;
+                        } else {
+                            u += s*1.5;
+                        }
+
+                        if (u < 0) {
+                            u += s*3;
+                        }
+
+                        if (u > (S - s)) {
+                            u -= s*3;
+                        }
+
+                        E[0] = u
                     } else {
                         K++;
                         E = N();
+                        l = 9;
                     }
-                    R(E[0], E[1], s, s, '#' + E[2] + '00');
+                    R(E[0], E[1], s, s, '#6' + l + l);
                 } else {
                     R(B[i][0], B[i][1], b, b, '#dd0'); // bullet
                 }
