@@ -1,14 +1,19 @@
+/* global a */
 var M,
     W = window,
     S = 640, // window size
     s = 32, // size
     t = 22, // tempo
     B = [], // bullet
-    b = 6, // Bullet size
+    k = 6, // Bullet size
     r = function (i, j) { // generate random number in range i to j
+        'use strict';
+
         return Math.floor((Math.random() * (j - i)) + i);
     },
     N = function () { // generate new enemy
+        'use strict';
+
         return [r(0, S - s), r(0, S - (s * 3))];
     },
     E = N(), // Enemy
@@ -17,14 +22,17 @@ var M,
     o = S - (s * 1.5), // Player y
     K = 0, // KILLS
     T = 9999, // Time to count down
-    h = 0, // time helper
-    R = function (x, y, w, h, c) { // draw rectangle
+    d = function (x, y, w, h, c) { // draw rectangle
+        'use strict';
+
         a.beginPath();
         a.rect(x, y, w, h);
         a.fillStyle = c;
         a.fill();
     },
     w = function (t, x, y) {
+        'use strict';
+
         a.fillStyle = '#fff';
         a.t(t, x, y);
     };
@@ -34,12 +42,16 @@ a.canvas.width = a.canvas.height = S;
 
 // Bindings
 W.onkeydown = function (e) {
-    if (e.keyCode == s) { // fire, use var s, 'cause its - 1byte
-        B.push([O + (s / 2) - (b / 2), o]);
+    'use strict';
+
+    if (e.keyCode === s) { // fire, use var s, 'cause its - 1byte
+        B.push([O + (s / 2) - (k / 2), o]);
     }
 };
 
 W.onmousemove = function (e) {
+    'use strict';
+
     // player position
     O = e.pageX;
 
@@ -53,19 +65,21 @@ W.onmousemove = function (e) {
     }
 };
 
-R(0, 0, S, S, '#987'); // background
+d(0, 0, S, S, '#987'); // background
 w('GO', s, s);
 
-W.onclick = function (e) {
+W.onclick = function () {
+    'use strict';
+
     this.onclick = null;
     // main();
     M = W.setInterval(function () {
         // draw map
         a.clearRect(0, 0, S, S);
-        R(0, 0, S, S, '#987'); // background
+        d(0, 0, S, S, '#987'); // background
 
         // enemy
-        R(E[0], E[1], s, s, '#6' + l + l);
+        d(E[0], E[1], s, s, '#6' + l + l);
 
         // bullets
         for (var i = 0; i < B.length; i++) {
@@ -73,7 +87,7 @@ W.onclick = function (e) {
 
             if (B[i][1] >= 0) { // if not end of the field
                 var A = B[i][1] <= E[1] + s,
-                    Z = B[i][0] > E[0] - b && B[i][0] < E[0] + s,
+                    Z = B[i][0] > E[0] - k && B[i][0] < E[0] + s,
                     u = E[0];
 
                 if (A && Z) { // enemy collision
@@ -95,15 +109,15 @@ W.onclick = function (e) {
                             u -= s*3;
                         }
 
-                        E[0] = u
+                        E[0] = u;
                     } else {
                         K++;
                         E = N();
                         l = 9;
                     }
-                    R(E[0], E[1], s, s, '#6' + l + l);
+                    d(E[0], E[1], s, s, '#6' + l + l);
                 } else {
-                    R(B[i][0], B[i][1], b, b, '#dd0'); // bullet
+                    d(B[i][0], B[i][1], k, k, '#dd0'); // bullet
                 }
             } else {
                 B.splice(i, 1);
@@ -111,7 +125,7 @@ W.onclick = function (e) {
         }
 
         // draw player
-        R(O, o, s, s, '#dd0');
+        d(O, o, s, s, '#dd0');
 
         // count time down
         T--;
